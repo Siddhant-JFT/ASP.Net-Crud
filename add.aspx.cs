@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
@@ -10,8 +12,7 @@ namespace CRUD_Operations
 {
     public partial class add : System.Web.UI.Page
     {
-         SqlConnection con = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=crudDB;Integrated Security=True");
-        string name, email, contact, salary;
+        string name, email, contact, salary, image;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (System.Web.HttpContext.Current.Session["id"] == null)
@@ -22,18 +23,24 @@ namespace CRUD_Operations
             {
                 try
                 {
-                    // SqlConnection con = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=crudDB;Integrated Security=True");
-                    con.Open();
+                    
                     name = Request.QueryString["Name"].ToString();
                     email = Request.QueryString["email"].ToString();
                     contact = Request.QueryString["Contact"].ToString();
                     salary = Request.QueryString["Salary"].ToString();
-                    
-                    SqlCommand cmd = con.CreateCommand();
-                    cmd.CommandType = System.Data.CommandType.Text;
-                    cmd.CommandText = "INSERT INTO Emp(Name,email,Contact,Salary) VALUES ('" + name + "','" + email + "','" + contact+ "','" + salary+ "')";
+                    image = Request.QueryString["Image"].ToString();
+                    string conn = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+                    SqlConnection cn = new SqlConnection(conn);
+                    SqlCommand cmd = new SqlCommand("toAdd", cn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@name", (name));
+                    cmd.Parameters.AddWithValue("@email", (email));
+                    cmd.Parameters.AddWithValue("@contact", (contact));
+                    cmd.Parameters.AddWithValue("@salary", (salary));
+                    cmd.Parameters.AddWithValue("@image", (image));
+                    cn.Open();
                     cmd.ExecuteNonQuery();
-                    con.Close();
+                    cn.Close();
                 }
                 catch (Exception ex)
                 {

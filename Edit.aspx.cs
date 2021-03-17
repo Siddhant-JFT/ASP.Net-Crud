@@ -1,20 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace CRUD_Operations
 {
     public partial class Edit : System.Web.UI.Page
     {
-        SqlConnection con = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=crudDB;Integrated Security=True");
-        string name, email, contact, salary;
+        string name, email, contact, salary, id;
         protected void Page_Load(object sender, EventArgs e)
         {
-           if (System.Web.HttpContext.Current.Session["id"] == null)
+            if (System.Web.HttpContext.Current.Session["id"] == null)
             {
                 Response.Redirect("Default.aspx");
             }
@@ -26,19 +22,27 @@ namespace CRUD_Operations
                     email = Request.QueryString["email"].ToString();
                     contact = Request.QueryString["contact"].ToString();
                     salary = Request.QueryString["salary"].ToString();
-                    string id = Request.QueryString["id"].ToString();
-                    con.Open();
-                    SqlCommand cmd = con.CreateCommand();
-                    cmd.CommandType = System.Data.CommandType.Text;
-                    cmd.CommandText = "update dbo.Emp set Name='" + name + "',email='" + email + "',Contact='" + contact + "',Salary='" + salary + "' where id=" + Convert.ToInt32(id);
+                    id = Request.QueryString["id"].ToString();
+
+                    string conn = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+                    SqlConnection cn = new SqlConnection(conn);
+                    SqlCommand cmd = new SqlCommand("toEdit", cn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@Name", name);
+                    cmd.Parameters.AddWithValue("@email", email);
+                    cmd.Parameters.AddWithValue("@Contact", contact);
+                    cmd.Parameters.AddWithValue("@Salary", salary);
+                    cmd.Parameters.AddWithValue("@id", Convert.ToInt32(id));
+
+                    cn.Open();
                     cmd.ExecuteNonQuery();
-                    con.Close();
+                    cn.Close();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     ex.Message.ToString();
                 }
-                
+
             }
         }
 

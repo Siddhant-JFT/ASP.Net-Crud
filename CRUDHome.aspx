@@ -1,33 +1,49 @@
 ﻿<%@ Page Title="Dashboard" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CRUDHome.aspx.cs" Inherits="CRUD_Operations.CRUDHome" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+    <!--Add Modal-->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="addModalLongTitle">Please Fill This Form</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-6" style="margin-top: 10px;">
+                        <asp:Label ID="Label2" runat="server" Text="Name: "></asp:Label><input class="form-control" id="ename" type="text" runat="server" autoclear="true" />
+                    </div>
+                    <div class="col-md-6" style="margin-top: 10px;">
+                        <asp:Label ID="Label3" runat="server" Text="Email: "></asp:Label><input class="form-control" id="email" type="text" runat="server" autoclear="true" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-6" style="margin-top: 10px;">
+                        <asp:Label ID="Label4" runat="server" Text="Contact No: "></asp:Label><input class="form-control" id="econtact" type="text" runat="server" autoclear="true" />
+                    </div>
+                    <div class="col-md-6" style="margin-top: 10px;">
+                        <asp:Label ID="Label5" runat="server" Text="Salary: "></asp:Label><input class="form-control" id="esalary" type="text" runat="server" autoclear="true" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btnout btn-secondary" style="margin-top: 10px;" data-dismiss="modal">Close</button>
+                    <button type="button" id="btn_add" style="margin-top: 10px;" class="btn btn-primary" value="Add Record" onclick="AddRec()" data-dismiss="modal">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Add Modal End-->
+
+    <!--Add Modal Trigger Button-->
     <div class="container">
         <div class="row">
             <div class="col form-group">
-                <%--<h1>Your Session: <asp:Label ID="Label1" runat="server"></asp:Label> is active.</h1>--%>
-                <div class="container-fluid">
-                    <div class="form-row">
-                        <div class="col-sm-3">
-                            <asp:Label ID="Label2" runat="server" Text="Name: "></asp:Label><input class="form-control" id="ename" type="text" runat="server" autoclear="true"/>
-                        </div>
-                        <div class="col-sm-3">
-                            <asp:Label ID="Label3" runat="server" Text="Email: "></asp:Label><input class="form-control" id="email" type="text" runat="server" autoclear="true"/>
-                        </div>
-                        <div class="col-sm-3">
-                            <asp:Label ID="Label4" runat="server" Text="Contact No: "></asp:Label><input class="form-control" id="econtact" type="text" runat="server" autoclear="true"/>
-                        </div>
-                        <div class="col-sm-3">
-                            <asp:Label ID="Label5" runat="server" Text="Salary: "></asp:Label><input class="form-control" id="esalary" type="text" runat="server" autoclear="true"/>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-sm-12" style="margin: 1% 40%;">
-                           <input class="btn btn-primary" ID="btn_add" type="button" value="Add Record" onclick="AddRec()" />
-                        </div>
-                    </div>
-                </div>
+                <button type="button" class="btn btn-info btnout" data-toggle="modal" data-target="#addModal">Add New Record</button>
                 <hr />
-                <table style="width: 100%; height: 93px;">
+                <table style="width: 100%; height: 93px; margin-left: 20px;">
                     <thead>
                         <tr>
                             <th>S. No.</th>
@@ -38,124 +54,148 @@
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
-                    
+
                     <tbody id="lbltbl" runat="server">
                     </tbody>
-                </table>                
+                </table>
             </div>
         </div>
     </div>
-    <!-- Modal -->
+
+    <!-- Edit Modal -->
     <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="editModalLongTitle">Please change the data</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                      <label for="Name">Name</label>
-                      <input type="text" class="form-control" id="empname" placeholder="Name">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLongTitle">Please change the data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6" style="margin-top: 10px;">
+                            <label for="Name">Name</label>
+                            <input type="text" class="form-control" id="empname" placeholder="Name">
+                        </div>
+                        <div class="form-group col-md-6" style="margin-top: 10px;">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="empmail" placeholder="Email">
+                        </div>
                     </div>
-                    <div class="form-group col-md-6">
-                      <label for="email">Email</label>
-                      <input type="email" class="form-control" id="empmail" placeholder="Email">
+                    <div class="form-row">
+                        <div class="form-group col-md-6" style="margin-top: 10px;">
+                            <label for="Name">Contact No</label>
+                            <input type="text" class="form-control" id="empcontact" placeholder="Contact">
+                        </div>
+                        <div class="form-group col-md-6" style="margin-top: 10px;">
+                            <label for="Name">Salary</label>
+                            <input type="text" class="form-control" id="empsalary" placeholder="Salary">
+                        </div>
                     </div>
                 </div>
-              <div class="form-row">
-                    <div class="form-group col-md-6">
-                      <label for="Name">Contact No</label>
-                      <input type="text" class="form-control" id="empcontact" placeholder="Contact">
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label for="Name">Salary</label>
-                      <input type="text" class="form-control" id="empsalary" placeholder="Salary">
-                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btnout btn-secondary" style="margin-top: 10px;" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btnout btn-primary" style="margin-top: 10px;" onclick="update()" data-dismiss="modal">Save changes</button>
                 </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" onclick="update()" data-dismiss="modal">Save changes</button>
-          </div>
+            </div>
         </div>
-      </div>
     </div>
-    <!--Modal for Delete-->
+
+    <!--Delete Modal-->
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Confirm to delete the record.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="deleteRec()">Delete</button>
-      </div>
-    </div>
-  </div>
-</div>
-    <!--Alert Modal-->
-    <!-- Modal -->
-    <div class="modal fade" id="Alert Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="AlertModalTitle">Alert!!!</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
-          </div>
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Confirm to delete the record.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="deleteRec()">Delete</button>
+                </div>
+            </div>
         </div>
-      </div>
+    </div>
+
+    <!--Alert Modal-->
+    <div class="modal fade" id="Alert Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AlertModalTitle">Alert!!!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
+                </div>
+            </div>
+        </div>
     </div>
     <p id="testres"></p>
     <input type="hidden" value="" id="empid" />
+
+    <!--Script Here-->
     <script>
         //Add New Record
+        function afterValidation() {
+            document.getElementById("MainContent_econtact").style.borderColor = "black";
+            document.getElementById("MainContent_ename").style.borderColor = "black";
+            document.getElementById("MainContent_email").style.borderColor = "black";
+            document.getElementById("MainContent_esalary").style.borderColor = "black";
+        }
         function AddRec() {
-            console.log("Add function called!")
+            console.log("Add function called!");
             var ename = document.getElementById("MainContent_ename").value;
             var eemail = document.getElementById("MainContent_email").value;
             var econtact = document.getElementById("MainContent_econtact").value;
             var esalary = document.getElementById("MainContent_esalary").value;
-            var numberFormat = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
-            var efm = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-]+/;
-            if (ename == "" || ename.length < 3 || econtact.length != 10 || esalary.length < 3) {
-                if (econtact!=(numberFormat)) {
-                    alert("Invalid Phone Number. Unable To Insert The Data. ");
-                    return (false);
-                } 
-                //remove comments above and add else to if below
-                else if (Number.isNaN(esalary)) {
-                    alert("Invalid Value For Salary. Unable To Insert The Data. ");
-                    return (false);
-                }
-                else {
-                    alert("Unable To Insert The Data. ");
-                    return (false);
-                }
+            // var numberFormat = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+            if (econtact.length != 10) {
+                document.getElementById("MainContent_econtact").style.borderColor = "red";
+                //alert("Invalid Phone Number. Please retry.");
+                document.getElementById('btn_add').setAttribute("data-dismiss", "none");
+            }
+            else {
+                document.getElementById("MainContent_econtact").style.borderColor = "green";
+            }
+
+            if (esalary.length < 3) {
+                document.getElementById("MainContent_esalary").style.borderColor = "red";
+                //alert("Salary must be greater than three digits. Please retry.");
+                document.getElementById('btn_add').setAttribute("data-dismiss", "none");
+            }
+            else {
+                document.getElementById("MainContent_esalary").style.borderColor = "green";
+            }
+            if (ename.length < 2) {
+                document.getElementById("MainContent_ename").style.borderColor = "red";
+                //alert("Name must be greater than three chars. Please retry.");
+                document.getElementById('btn_add').setAttribute("data-dismiss", "none");
+            }
+            else {
+                document.getElementById("MainContent_ename").style.borderColor = "green";
             }
             if (!/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(eemail)) {
-                alert("Invalid Email Address. Unable To Insert The Data. ");
+                //alert("Invalid Email Address. Please retry.");
+                document.getElementById("MainContent_email").style.borderColor = "red";
+                document.getElementById('btn_add').setAttribute("data-dismiss", "none");
                 return (false);
             }
-            
+            else {
+                document.getElementById("MainContent_email").style.borderColor = "green";
+            }
+
+            afterValidation();
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.open("POST", "add.aspx?name=" + ename + "&email=" + eemail + "&contact=" + econtact + "&salary=" + esalary, false);
             xmlhttp.send(null);
@@ -165,7 +205,8 @@
             document.getElementById("MainContent_econtact").value = "";
             document.getElementById("MainContent_esalary").value = "";
             refresh();
-            xmlhttp.abort; 
+            xmlhttp.abort;
+            document.getElementById('btn_add').setAttribute("data-dismiss", "modal");
         }
         //Identifier for the record updater
         function updateEmp(sid) {
@@ -183,7 +224,7 @@
             var values = [];
             for (i = 0; i < 4; i++) {
                 values[i] = responseString.substring(initialIndex, indexofsplitter);
-                initialIndex = indexofsplitter + 1;
+                //initialIndex = indexofsplitter + 1;
                 indexofsplitter = responseString.indexOf("|", indexofsplitter + 1);
             }
             document.getElementById("empname").value = values[0];
@@ -197,7 +238,7 @@
             var name = document.getElementById("empname").value;
             var email = document.getElementById("empmail").value;
             var contact = document.getElementById("empcontact").value;
-            var salary= document.getElementById("empsalary").value;
+            var salary = document.getElementById("empsalary").value;
             var id = document.getElementById("empid").value;
 
             var xmlhttp = new XMLHttpRequest();
@@ -234,5 +275,5 @@
             //xmlhttp.abort;
         }
     </script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-</asp:content>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</asp:Content>

@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
 using CRUD_Operations;
+using System.Configuration;
 
 namespace CRUD_Operations
 {
@@ -18,16 +19,18 @@ namespace CRUD_Operations
         }
         protected void Button1_Click(object sender, EventArgs e)
         {
-            SqlConnection con = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=crudDB;Integrated Security=True");
-            SqlCommand cmd = new SqlCommand("select * from login where username=@username and password=@password", con);
+            string conn = ConfigurationManager.ConnectionStrings["DBCS"].ConnectionString;
+            SqlConnection cn = new SqlConnection(conn);
+            SqlCommand cmd = new SqlCommand("toLogin", cn);
+            cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.AddWithValue("@username", TextBox1.Text);
             cmd.Parameters.AddWithValue("password", TextBox2.Text);
             SqlDataAdapter sda = new SqlDataAdapter(cmd);
             DataTable dt = new DataTable();
             sda.Fill(dt);
-            con.Open();
+            cn.Open();
             int i = cmd.ExecuteNonQuery();
-            con.Close();
+            cn.Close();
             if (dt.Rows.Count > 0)
             {
                 Session["id"] = TextBox1.Text;
@@ -36,7 +39,7 @@ namespace CRUD_Operations
             }
             else
             {
-                Label1.Text = "Incorrect User Credentials";
+                Label1.Text = "Invalid User Credentials";
                 Label1.ForeColor = System.Drawing.Color.Red;
 
             }
