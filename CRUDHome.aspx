@@ -147,7 +147,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                  <img style="width: 400px; height: 200px; border:none; outline:none; " id="empimage" src="">
+                  <img style="width: 400px; height: 350px; border:none; outline:none; " id="empimage" alt=":/">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
