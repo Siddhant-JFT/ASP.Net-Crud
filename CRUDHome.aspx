@@ -28,6 +28,16 @@
                         <asp:Label ID="Label5" runat="server" Text="Salary: "></asp:Label><input class="form-control" id="esalary" type="text" runat="server" autoclear="true" />
                     </div>
                 </div>
+                <div class="form-row">
+                    <div class="custom-file" style="padding: 6px 20px;">
+                        <label class="" for="customFileLang">Select Image: </label>
+                        <input type="file" class="custom-file-input btn-secondary" id="fileUpload" style="display: inline-block">
+                        <progress id="fileProgress" style="display: none"></progress>
+                        <hr />
+                        <span id="lblMessage" style="color: Green"></span>
+                    </div>
+
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btnout btn-secondary" style="margin-top: 10px;" data-dismiss="modal">Close</button>
                     <button type="button" id="btn_add" style="margin-top: 10px;" class="btn btn-primary" value="Add Record" onclick="AddRec()" data-dismiss="modal">Save changes</button>
@@ -46,11 +56,11 @@
                 <table style="width: 100%; height: 93px; margin-left: 20px;">
                     <thead>
                         <tr>
-                            <th>S. No.</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Contact No.</th>
-                            <th>Salary</th>
+                            <th class='col-sm-1'>S. No.</th>
+                            <th class='col-sm-2'>Name</th>
+                            <th class='col-sm-3'>Email</th>
+                            <th class='col-sm-2'>Contact No.</th>
+                            <th class='col-sm-1'>Salary</th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
@@ -147,6 +157,8 @@
     <!--Script Here-->
     <script>
         //Add New Record
+        var fileName; 
+
         function afterValidation() {
             document.getElementById("MainContent_econtact").style.borderColor = "black";
             document.getElementById("MainContent_ename").style.borderColor = "black";
@@ -154,12 +166,13 @@
             document.getElementById("MainContent_esalary").style.borderColor = "black";
         }
         function AddRec() {
+            imageUpload();
             console.log("Add function called!");
             var ename = document.getElementById("MainContent_ename").value;
             var eemail = document.getElementById("MainContent_email").value;
             var econtact = document.getElementById("MainContent_econtact").value;
             var esalary = document.getElementById("MainContent_esalary").value;
-            // var numberFormat = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+            
             if (econtact.length != 10) {
                 document.getElementById("MainContent_econtact").style.borderColor = "red";
                 //alert("Invalid Phone Number. Please retry.");
@@ -197,7 +210,7 @@
 
             afterValidation();
             var xmlhttp = new XMLHttpRequest();
-            xmlhttp.open("POST", "add.aspx?name=" + ename + "&email=" + eemail + "&contact=" + econtact + "&salary=" + esalary, false);
+            xmlhttp.open("POST", "add.aspx?name=" + ename + "&email=" + eemail + "&contact=" + econtact + "&salary=" + esalary + "&image=" + fileName, false);
             xmlhttp.send(null);
 
             document.getElementById("MainContent_ename").value = "";
@@ -224,7 +237,7 @@
             var values = [];
             for (i = 0; i < 4; i++) {
                 values[i] = responseString.substring(initialIndex, indexofsplitter);
-                //initialIndex = indexofsplitter + 1;
+                initialIndex = indexofsplitter + 1;
                 indexofsplitter = responseString.indexOf("|", indexofsplitter + 1);
             }
             document.getElementById("empname").value = values[0];
@@ -265,6 +278,42 @@
             document.getElementById("empid").value = "";
             refresh();
             xmlhttp.abort;
+        }
+        //Upload Image
+        function imageUpload() {
+            var fd = new FormData();
+            var files = $('#fileUpload')[0].files;
+            if (files.length > 0) {
+                fd.append('file', files[0]);
+            }
+            $.ajax({
+                url: 'ImageUploader.ashx',
+                type: 'POST',
+                data: fd,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (file) {
+                    fileName = file.name;
+                    $("#fileProgress").hide();
+                },
+                xhr: function () {
+                    var fileXhr = $.ajaxSettings.xhr();
+                    if (fileXhr.upload) {
+                        $("progress").show();
+                        fileXhr.upload.addEventListener("progress", function (e) {
+                            if (e.lengthComputable) {
+                                $("#fileProgress").attr({
+                                    value: e.loaded,
+                                    max: e.total
+                                });
+                            }
+                        }, false);
+                    }
+                    return fileXhr;
+                }
+            });
         }
         //Refreshes the Employee Details Table
         function refresh() {
