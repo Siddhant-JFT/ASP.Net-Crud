@@ -26,10 +26,13 @@
                     </div>
                     <div class="col-md-6" style="margin-top: 10px;">
                         <asp:Label ID="Label5" runat="server" Text="Salary: "></asp:Label><input class="form-control" id="esalary" type="text" runat="server" autoclear="true" />
+                        <br />
                     </div>
                 </div>
+
                 <div class="form-row">
-                    <div class="custom-file" style="padding: 6px 20px;">
+                    <div class="custom-file" style="padding: 6px 10px;">
+                       
                         <label class="" for="customFileLang">Select Image: </label>
                         <input type="file" class="custom-file-input btn-secondary" id="fileUpload" style="display: inline-block">
                         <progress id="fileProgress" style="display: none"></progress>
@@ -117,7 +120,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
+                    <h3 class="modal-title" id="exampleModalLongTitle">Are you sure?</h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -133,20 +136,21 @@
         </div>
     </div>
 
-    <!--Alert Modal-->
-    <div class="modal fade" id="Alert Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <!--Image Modal-->
+    <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="AlertModalTitle">Alert!!!</h5>
+                    <h3 class="modal-title" id="AlertModalTitle">Uploaded Image</h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
+                  <img style="width: 400px; height: 200px; border:none; outline:none; " id="empimage" src="">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Ok</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -175,7 +179,6 @@
             
             if (econtact.length != 10) {
                 document.getElementById("MainContent_econtact").style.borderColor = "red";
-                //alert("Invalid Phone Number. Please retry.");
                 document.getElementById('btn_add').setAttribute("data-dismiss", "none");
             }
             else {
@@ -184,7 +187,6 @@
 
             if (esalary.length < 3) {
                 document.getElementById("MainContent_esalary").style.borderColor = "red";
-                //alert("Salary must be greater than three digits. Please retry.");
                 document.getElementById('btn_add').setAttribute("data-dismiss", "none");
             }
             else {
@@ -192,15 +194,13 @@
             }
             if (ename.length < 2) {
                 document.getElementById("MainContent_ename").style.borderColor = "red";
-                //alert("Name must be greater than three chars. Please retry.");
                 document.getElementById('btn_add').setAttribute("data-dismiss", "none");
             }
             else {
                 document.getElementById("MainContent_ename").style.borderColor = "green";
             }
             if (!/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(eemail)) {
-                //alert("Invalid Email Address. Please retry.");
-                document.getElementById("MainContent_email").style.borderColor = "red";
+               document.getElementById("MainContent_email").style.borderColor = "red";
                 document.getElementById('btn_add').setAttribute("data-dismiss", "none");
                 return (false);
             }
@@ -235,6 +235,7 @@
             var indexofsplitter = responseString.indexOf("|", 0);
             var initialIndex = 0;
             var values = [];
+           // console.log(responseString)
             for (i = 0; i < 4; i++) {
                 values[i] = responseString.substring(initialIndex, indexofsplitter);
                 initialIndex = indexofsplitter + 1;
@@ -244,6 +245,29 @@
             document.getElementById("empmail").value = values[1];
             document.getElementById("empcontact").value = values[2];
             document.getElementById("empsalary").value = values[3];
+            xmlhttp.abort;
+        }
+        //Show Image Button Calls this
+        function showImage(sid) {
+            document.getElementById("empid").value.sid;
+            displayImage(sid);
+        }
+        //To Show Image
+        function displayImage(id) {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open("POST", "ImageDisplay.aspx?id=" + id, false);
+            xmlhttp.send(null);
+            var responseString = xmlhttp.responseText.toString();
+            var indexofsplitter = responseString.indexOf("|", 0);
+            var initialIndex = 0;
+            var values = [];
+            // console.log(responseString)
+            for (i = 0; i < 1; i++) {
+                values[i] = responseString.substring(initialIndex, indexofsplitter);
+                initialIndex = indexofsplitter + 1;
+                indexofsplitter = responseString.indexOf("|", indexofsplitter + 1);
+            }
+            document.getElementById("empimage").src = "./Images/"+values[0];
             xmlhttp.abort;
         }
         //For-Updating any Record

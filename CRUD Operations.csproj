@@ -128,6 +128,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="ImageDisplay.aspx" />
     <Content Include="ImageUploader.ashx" />
     <None Include="Properties\PublishProfiles\IISProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
@@ -224,6 +225,13 @@
     <Compile Include="Employees.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="ImageDisplay.aspx.cs">
+      <DependentUpon>ImageDisplay.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ImageDisplay.aspx.designer.cs">
+      <DependentUpon>ImageDisplay.aspx</DependentUpon>
     </Compile>
     <Compile Include="ImageUploader.ashx.cs">
       <DependentUpon>ImageUploader.ashx</DependentUpon>
